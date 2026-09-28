@@ -1,0 +1,21 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# IDE / editor
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Logs & OS noise
+*.log
+Thumbs.db
+.DS_Store

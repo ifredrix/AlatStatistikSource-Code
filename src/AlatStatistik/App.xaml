@@ -1,0 +1,373 @@
+<Application x:Class="AlatStatistik.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        
+        <Color x:Key="WarnaLatar">#F4F6FB</Color>
+        <Color x:Key="WarnaPanel">#FFFFFF</Color>
+        <Color x:Key="WarnaPanel2">#EEF1F7</Color>
+        <Color x:Key="WarnaPanel3">#E3E8F0</Color>
+        <Color x:Key="WarnaGaris">#C8D1DE</Color>
+        <Color x:Key="WarnaTeks">#16213A</Color>
+        <Color x:Key="WarnaTeksRedup">#4F5A6E</Color>
+        <!-- Aksen = teks & latar tombol primer. Nilai lama #0EA5E9 hanya 2,77:1
+             di atas putih (gagal WCAG AA) — diganti #0369A1 = 5,93:1. -->
+        <Color x:Key="WarnaAksen">#0369A1</Color>
+        <Color x:Key="WarnaAksenTua">#02507B</Color>
+        <Color x:Key="WarnaAksenMuda">#0EA5E9</Color>
+
+        <!-- Sukses sebagai teks harus #047857 (5,48:1); #10B981 (2,54:1) hanya
+             untuk ikon & isian banner. -->
+        <Color x:Key="WarnaSukses">#047857</Color>
+        <Color x:Key="WarnaSuksesMuda">#10B981</Color>
+
+        <!-- Batas kontrol butuh 3:1 (WCAG 1.4.11). Garis #C8D1DE hanya 1,54:1
+             dan sekarang dipakai untuk garis kisi/dekorasi saja. -->
+        <Color x:Key="WarnaGarisKontrol">#6B7688</Color>
+        <Color x:Key="WarnaFokus">#0B6BCB</Color>
+        <Color x:Key="WarnaPeringatan">#B45309</Color>
+        <Color x:Key="WarnaBahaya">#DC2626</Color>
+
+        <SolidColorBrush x:Key="Latar" Color="{StaticResource WarnaLatar}"/>
+        <SolidColorBrush x:Key="Panel" Color="{StaticResource WarnaPanel}"/>
+        <SolidColorBrush x:Key="Panel2" Color="{StaticResource WarnaPanel2}"/>
+        <SolidColorBrush x:Key="Panel3" Color="{StaticResource WarnaPanel3}"/>
+        <SolidColorBrush x:Key="Garis" Color="{StaticResource WarnaGaris}"/>
+        <SolidColorBrush x:Key="Teks" Color="{StaticResource WarnaTeks}"/>
+        <SolidColorBrush x:Key="TeksRedup" Color="{StaticResource WarnaTeksRedup}"/>
+        <SolidColorBrush x:Key="Aksen" Color="{StaticResource WarnaAksen}"/>
+        <SolidColorBrush x:Key="AksenTua" Color="{StaticResource WarnaAksenTua}"/>
+        <SolidColorBrush x:Key="AksenMuda" Color="{StaticResource WarnaAksenMuda}"/>
+        <SolidColorBrush x:Key="Sukses" Color="{StaticResource WarnaSukses}"/>
+        <SolidColorBrush x:Key="SuksesMuda" Color="{StaticResource WarnaSuksesMuda}"/>
+        <SolidColorBrush x:Key="GarisKontrol" Color="{StaticResource WarnaGarisKontrol}"/>
+        <SolidColorBrush x:Key="Fokus" Color="{StaticResource WarnaFokus}"/>
+
+        <!-- Cincin fokus: wajib tampak di semua kontrol (WCAG 2.4.7 / 2.4.11).
+             2 px, warna 5,28:1 terhadap putih, dengan jarak 2 px dari tepi. -->
+        <Style x:Key="CincinFokus" TargetType="Control">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="-3"
+                                   StrokeThickness="2"
+                                   Stroke="{StaticResource Fokus}"
+                                   StrokeDashArray="4 2"
+                                   SnapsToDevicePixels="True"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Peringatan" Color="{StaticResource WarnaPeringatan}"/>
+        <SolidColorBrush x:Key="Bahaya" Color="{StaticResource WarnaBahaya}"/>
+
+        
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{StaticResource Latar}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <!-- Penting di skala 125%/150%: bulatkan tata letak & tempelkan ke
+                 kisi piksel supaya garis 1 px tidak hilang atau ganda. -->
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <!-- Angka rata (tabular): kolom angka statistik jadi mudah dibaca
+                 berurutan. Ini salah satu syarat keterbacaan tabel hasil. -->
+            <Setter Property="Typography.NumeralAlignment" Value="Tabular"/>
+        </Style>
+
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="{StaticResource Panel}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Garis}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Grid>
+                            <Border x:Name="Bingkai"
+                                    Background="{TemplateBinding Background}"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter ContentSource="Header" RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center" HorizontalAlignment="Left"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                            <Popup x:Name="Popup"
+                                   IsOpen="{TemplateBinding IsSubmenuOpen}"
+                                   Placement="Bottom"
+                                   HorizontalOffset="-4" VerticalOffset="0"
+                                   Focusable="False" PopupAnimation="None">
+                                <Border Background="{StaticResource Panel2}"
+                                        BorderBrush="{StaticResource Garis}" BorderThickness="1" Padding="4">
+                                    <StackPanel IsItemsHost="True"
+                                                KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Role" Value="SubmenuHeader">
+                                <Setter TargetName="Popup" Property="Placement" Value="Right"/>
+                                <Setter TargetName="Popup" Property="HorizontalOffset" Value="0"/>
+                                <Setter TargetName="Popup" Property="VerticalOffset" Value="-1"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bingkai" Property="Background" Value="{StaticResource Panel3}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Separator">
+            <Setter Property="Background" Value="{StaticResource Garis}"/>
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="4,2"/>
+        </Style>
+
+        
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Panel2}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GarisKontrol}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource CincinFokus}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bingkai" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bingkai" Property="Background" Value="{StaticResource Panel3}"/>
+                                <Setter TargetName="Bingkai" Property="BorderBrush" Value="{StaticResource AksenTua}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Bingkai" Property="BorderBrush" Value="{StaticResource Fokus}"/>
+                                <Setter TargetName="Bingkai" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bingkai" Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TombolUtama" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource Aksen}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AksenTua}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource Panel2}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GarisKontrol}"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="CaretBrush" Value="{StaticResource Teks}"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource CincinFokus}"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource Panel2}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GarisKontrol}"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource CincinFokus}"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="Margin" Value="0,3"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource CincinFokus}"/>
+        </Style>
+
+        
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="{StaticResource Latar}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Background" Value="{StaticResource Panel}"/>
+            <Setter Property="Foreground" Value="{StaticResource TeksRedup}"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Bingkai" Background="{TemplateBinding Background}"
+                                BorderBrush="{StaticResource Garis}" BorderThickness="1,1,1,0"
+                                CornerRadius="6,6,0,0" Padding="{TemplateBinding Padding}" Margin="0,0,3,0">
+                            <!-- RecognizesAccessKey wajib: tanpanya garis bawat akses
+                                 (_Keluaran) tampak sebagai garis bawah harfiah. -->
+                            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bingkai" Property="Background" Value="{StaticResource Panel2}"/>
+                                <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- GroupBox bawaan WPF bergaris ganda dan kepalanya menabrak bingkai.
+             Versi ini menjadikan kepala sebagai bilah judul — jelas dibaca sebagai
+             "kelompok isian", bukan kotak dekoratif. -->
+        <Style TargetType="GroupBox">
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GarisKontrol}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Grid SnapsToDevicePixels="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Background="{StaticResource Panel2}"
+                                    BorderBrush="{StaticResource GarisKontrol}"
+                                    BorderThickness="1,1,1,0" CornerRadius="4,4,0,0"
+                                    Padding="10,5">
+                                <ContentPresenter ContentSource="Header" RecognizesAccessKey="True"
+                                                  TextElement.Foreground="{StaticResource Teks}"
+                                                  TextElement.FontWeight="SemiBold"
+                                                  TextElement.FontSize="12.5"/>
+                            </Border>
+                            <Border Grid.Row="1" Background="{StaticResource Panel}"
+                                    BorderBrush="{StaticResource GarisKontrol}"
+                                    BorderThickness="1,0,1,1" CornerRadius="0,0,4,4"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Daftar variabel: baris terpilih memakai latar aksen dengan teks putih
+             (5,93:1) supaya pilihan tampak jelas tanpa mengandalkan warna saja. -->
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{StaticResource Panel}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GarisKontrol}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource CincinFokus}"/>
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource CincinFokus}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Bingkai" Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bingkai" Property="Background" Value="{StaticResource Panel3}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bingkai" Property="Background" Value="{StaticResource Aksen}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Kartu: dipakai untuk setiap blok keluaran dan panel samping. -->
+        <Style x:Key="Kartu" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Panel}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Garis}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="12"/>
+        </Style>
+
+        
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="{StaticResource Panel}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Garis}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="{StaticResource Panel}"/>
+            <Setter Property="AlternatingRowBackground" Value="#FAFBFE"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource Garis}"/>
+            <Setter Property="VerticalGridLinesBrush" Value="{StaticResource Garis}"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="Typography.NumeralAlignment" Value="Tabular"/>
+            <!-- Target klik minimal 24 px (WCAG 2.5.8) -->
+            <Setter Property="MinRowHeight" Value="26"/>
+            <Setter Property="RowHeight" Value="26"/>
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource Panel2}"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Garis}"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource Panel3}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource Panel3}"/>
+                    <Setter Property="Foreground" Value="{StaticResource Teks}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
+</Application>
